@@ -30,6 +30,7 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.post("/sms", (req, res) => {
   console.log(req.body.Body);
   console.log(req.body.From);
+  console.log(req.body);
 
   const resp = new MessagingResponse();
   const nateInsults = [`U know why the ping pong table didn't tweet #MeToo?... cause you never hit it`, `That cheetah joke was terrible - What do you call a dog with no legs? Doesn't matter what you call him, he still ain't gonna come.`, `Ur q3 is an art project`, `20-12... 23-21 INSERT SMILEY FACE WHERE USER === JOSH`, `Dude, ur getting trolled by a Node server, Math.floor(Math.random * 5) - don't make me explain it.`]
