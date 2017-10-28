@@ -32,8 +32,9 @@ app.post("/sms", (req, res) => {
   console.log(req.body.From);
   console.log(req.body);
 
+  let fromCountry = req.body.FromCountry
   const resp = new MessagingResponse();
-  const nateInsults = [`U know why the ping pong table didn't tweet #MeToo?... cause you never hit it`, `That cheetah joke was terrible - What do you call a dog with no legs? Doesn't matter what you call him, he still ain't gonna come.`, `Ur q3 is an art project`, `20-12... 23-21 INSERT SMILEY FACE WHERE USER === JOSH`, `Dude, ur getting trolled by a Node server, Math.floor(Math.random * 5) - don't make me explain it.`]
+  const nateInsults = [`${fromCountry} U know why the ping pong table didn't tweet #MeToo?... cause you never hit it`, `${fromCountry} That cheetah joke was terrible - What do you call a dog with no legs? Doesn't matter what you call him, he still ain't gonna come.`, `${fromCountry} Ur q3 is an art project`, `${fromCountry} 20-12... 23-21 INSERT SMILEY FACE WHERE USER === JOSH`, `${fromCountry} Dude, ur getting trolled by a Node server, Math.floor(Math.random * 5) - don't make me explain it.`]
   let random = Math.floor(Math.random()*5)
   console.log(nateInsults[random]);
 
@@ -43,12 +44,12 @@ app.post("/sms", (req, res) => {
     resp.message(nateInsults[random])
   }
   else if (req.body.From === `+15038902873`  || req.body.Body === `kyle` || req.body.Body === `Kyle`) {
-    resp.message(`Kyle, ur a bomb developer. Now go write some code so our Q3 doesn't suck.`)
+    resp.message(`${fromCountry} Kyle, ur a bomb developer. Now go write some code so our Q3 doesn't suck.`)
   }
   else if (req.body.From === `+12072130205` || req.body.Body === `josh` || req.body.Body === `Josh`){
-    resp.message(`nice work broski, go to bed`)
+    resp.message(`${fromCountry} nice work broski, go to bed`)
   }
-  else (resp.message(`Thanks for texting you, ur the best! Please send Josh ur phone number at 207-213-0205 so he can add you to his data object. Thanks!`))
+  else (resp.message(`${fromCountry} Thanks for texting you, ur the best! Please send Josh ur phone number at 207-213-0205 so he can add you to his data object. Thanks!`))
 
   //  resp.message(format('Hello, %s, you said: %s', sender, body));
   res
