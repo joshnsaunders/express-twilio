@@ -1,6 +1,7 @@
-//const config = require('./config.js')
+const config = require("./config.js");
+const fs = require("fs");
 //console.log(config);
-
+//let data = require('./data')
 const express = require("express");
 const app = express();
 const router = express.Router();
@@ -11,47 +12,68 @@ const cors = require("cors");
 let PORT = process.env.PORT || 3000;
 const path = require("path");
 const twilio = require("twilio");
-const accountSid = process.env.SID
+const accountSid = process.env.SID || config.SID;
 console.log(accountSid);
-const authToken = process.env.AUTH_TOKEN
+const authToken = process.env.AUTH_TOKEN || config.AUTH_TOKEN;
 console.log(authToken);
 let client = new twilio(accountSid, authToken);
 let MessagingResponse = require("twilio").twiml.MessagingResponse;
-
-
-
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../public")));
 
-
 app.post("/sms", (req, res) => {
-  console.log(req.body.Body);
-  console.log(req.body.From);
-  console.log(req.body);
-
-  let fromCountry = req.body.FromCountry
   const resp = new MessagingResponse();
-  const nateInsults = [`${fromCountry} U know why the ping pong table didn't tweet #MeToo?... cause you never hit it`, `${fromCountry} That cheetah joke was terrible - What do you call a dog with no legs? Doesn't matter what you call him, he still ain't gonna come.`, `${fromCountry} Ur q3 is an art project`, `${fromCountry} 20-12... 23-21 INSERT SMILEY FACE WHERE USER === JOSH`, `${fromCountry} Dude, ur getting trolled by a Node server, Math.floor(Math.random * 5) - don't make me explain it.`]
-  let random = Math.floor(Math.random()*5)
-  console.log(nateInsults[random]);
 
-  //let from = req.body.From;
+  let list = [];
+  let body = req.body.Body;
 
-  if (req.body.From === `+18102943376` || req.body.Body === `troll` || req.body.Body === `Troll`){
-    resp.message(nateInsults[random])
-  }
-  else if (req.body.From === `+15038902873`  || req.body.Body === `kyle` || req.body.Body === `Kyle`) {
-    resp.message(`${fromCountry} Kyle, ur a bomb developer. Now go write some code so our Q3 doesn't suck.`)
-  }
-  else if (req.body.From === `+12072130205` || req.body.Body === `josh` || req.body.Body === `Josh`){
-    resp.message(`${fromCountry} nice work broski, go to bed`)
-  }
-  else (resp.message(`${fromCountry} Thanks for texting you, ur the best! Please send Josh ur phone number at 207-213-0205 so he can add you to his data object. Thanks!`))
+  // fs.readFile("./data.json", "utf-8", function(err, data) {
+  //   let allData = JSON.parse(data);
+  //   //console.log(`line 37`, allData[0].start);
+  //   return allData[0].start
+  // });
 
-  //  resp.message(format('Hello, %s, you said: %s', sender, body));
+  let answers = [];
+  body = body.split(" ");
+  if (body[0] === `add` || body[0] === `Add` || body[0] === `ADD`) {
+    fs.readFile("./data.json", "utf-8", function(err, data) {
+      let regData = JSON.parse(data);
+      regData[0].start.push(body.splice(1, body.length).join(` `));
+      console.log(`line 47`, regData);
+      fs.writeFile(
+        "./data.json",
+        `[${JSON.stringify(regData[0])}]`,
+        "utf-8",
+        function() {
+          fs.readFile("./data.json", "utf-8", function(err, data) {
+            let responseData = JSON.parse(data);
+            let response = responseData[0].start.join(", ");
+            answers.push(response);
+            respons(answers);
+          });
+          console.log("done!");
+        }
+      );
+    });
+      resp.message(`the end`)
+  } else if (body[0] === `list` || body[0] === `List` || body[0] === `LIST`) {
+    for (let i = 0; i < array.length; i++) {
+      list.push(`${i + 1}. ${array[i]}`);
+    }
+    list = list.join(" ");
+    resp.message(list);
+  } else if (
+    body[0] === `remove` ||
+    body[0] === `Remove` ||
+    body[0] === `REMOVE`
+  ) {
+    array.splice(Number(body[1]) - 1, 1);
+    array = array.join(" ");
+    resp.message(array);
+  } else resp.message(`hi`);
   res
     .status(200)
     .contentType("text/xml")
@@ -68,7 +90,7 @@ app.get("/sms/send", (req, res) => {
   //   .then(function(data) {
   //     console.log(data.body);
   console.log(`hi`);
-      res.send(`hi`);
-    })
+  res.send(`hi`);
+});
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
