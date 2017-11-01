@@ -25,5 +25,7 @@ exports.seed = function(knex, Promise) {
           question_id: 3,
         }
       ]);
-    });
+    }).then(function(){
+      return knex.raw('alter sequence answers_id_seq restart with 4')
+    })
 };

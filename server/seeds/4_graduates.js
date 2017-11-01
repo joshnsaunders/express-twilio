@@ -42,5 +42,7 @@ exports.seed = function(knex, Promise) {
           class_name:3,
         },
       ]);
-    });
+    }).then(function(){
+      return knex.raw('alter sequence graduates_id_seq restart with 5')
+    })
 };

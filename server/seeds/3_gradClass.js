@@ -22,5 +22,8 @@ exports.seed = function(knex, Promise) {
           class_name:'2016_F',
         },
       ]);
-    });
+    })
+    // }).then(function(){
+    //   return knex.raw('alter sequence gradClass_id_seq restart with 5')
+    // })
 };

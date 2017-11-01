@@ -1,8 +1,8 @@
-//const config = require("./config.js");
+const config = require("./config.js");
 const fs = require("fs");
-const database = require('./db/knex')
-//console.log(config);
-//let data = require('./data')
+const database = require("./db/knex");
+const fetch = require("isomorphic-fetch");
+const data = require("./data");
 const express = require("express");
 const app = express();
 const router = express.Router();
@@ -10,101 +10,111 @@ const bodyParser = require("body-parser");
 const cookieparser = require("cookie-parser");
 const ngrok = require("ngrok");
 const cors = require("cors");
-let PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 const path = require("path");
 const twilio = require("twilio");
 const accountSid = process.env.SID || config.SID;
-console.log(accountSid);
 const authToken = process.env.AUTH_TOKEN || config.AUTH_TOKEN;
-console.log(authToken);
-let client = new twilio(accountSid, authToken);
-let MessagingResponse = require("twilio").twiml.MessagingResponse;
-
-//var graduates = require('./routes/graduates')
+const client = new twilio(accountSid, authToken);
+const MessagingResponse = require("twilio").twiml.MessagingResponse;
+const GraduatesRoutes = require("./routes/graduates")
+const AnswerRoutes = require("./routes/answers")
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../public")));
-app.use(router)
-//app.use(graduates)
+app.use(router);
+app.use(GraduatesRoutes)
+app.use(AnswerRoutes)
 
-
-router.get('/graduates' ,function(request, response){
-  database('graduates')
-    .then(function(data){
-      response.json(data)
-    })
-})
-
+router.get("/graduates/:class_name", function(request, response) {
+  let className = request.params.class_name;
+  database("graduates")
+    .select("phone_number")
+    .where("class_name", className)
+    .then(function(data) {
+      for (var i = 0; i < data.length; i++) {
+        client.messages
+          .create({
+            body: ` Are you attending a community college or post high school program of less than 2 years? Text YES, NO or STOP to opt out.`,
+            to: data[i][`phone_number`],
+            from: `+17206082877`
+          })
+          .then(message => console.log(message.sid));
+      }
+      response.json(data);
+    });
+});
 
 app.post("/sms", (req, res) => {
-  const resp = new MessagingResponse();
+  let response = new MessagingResponse();
+  let body = req.body.Body.split(" ");
+  let phoneNumber = req.body.From;
 
-  let list = [];
-  let body = req.body.Body;
-
+  // let answers = [];
+  //
   // fs.readFile("./data.json", "utf-8", function(err, data) {
-  //   let allData = JSON.parse(data);
-  //   //console.log(`line 37`, allData[0].start);
-  //   return allData[0].start
+  //   let regData = JSON.parse(data);
+  //   console.log(`data`, regData);
+  //   //regData[0].start.push(body.splice(1, body.length).join(` `));
+  //   console.log(`line 47`, regData);
+  //   fs.writeFile(
+  //     "./data.json",
+  //     `[${JSON.stringify(regData[0])}]`,
+  //     "utf-8",
+  //     function() {
+  //       fs.readFile("./data.json", "utf-8", function(err, data) {
+  //         let responseData = JSON.parse(data);
+  //         let response = responseData[0].start.join(", ");
+  //         answers.push(response);
+  //         console.log(answers);
+  //         //response(answers);
+  //       });
+  //       console.log("done!");
+  //     }
+  //   );
   // });
 
-  let answers = [];
-  body = body.split(" ");
-  if (body[0] === `add` || body[0] === `Add` || body[0] === `ADD`) {
-    fs.readFile("./data.json", "utf-8", function(err, data) {
-      let regData = JSON.parse(data);
-      regData[0].start.push(body.splice(1, body.length).join(` `));
-      console.log(`line 47`, regData);
-      fs.writeFile(
-        "./data.json",
-        `[${JSON.stringify(regData[0])}]`,
-        "utf-8",
-        function() {
-          fs.readFile("./data.json", "utf-8", function(err, data) {
-            let responseData = JSON.parse(data);
-            let response = responseData[0].start.join(", ");
-            answers.push(response);
-            respons(answers);
-          });
-          console.log("done!");
-        }
-      );
-    });
-      resp.message(`the end`)
-  } else if (body[0] === `list` || body[0] === `List` || body[0] === `LIST`) {
-    for (let i = 0; i < array.length; i++) {
-      list.push(`${i + 1}. ${array[i]}`);
-    }
-    list = list.join(" ");
-    resp.message(list);
-  } else if (
-    body[0] === `remove` ||
-    body[0] === `Remove` ||
-    body[0] === `REMOVE`
-  ) {
-    array.splice(Number(body[1]) - 1, 1);
-    array = array.join(" ");
-    resp.message(array);
-  } else resp.message(`hi`);
-  res
-    .status(200)
-    .contentType("text/xml")
-    .send(resp.toString());
+  if (body[0].toLowerCase() === "yes") {
+    postAnswerOne(req.body.Body, phoneNumber);
+
+    let newResponse = `q3`;
+    response.message(newResponse);
+  } else if (body[0].toLowerCase() === "no") {
+    postAnswerOne(req.body.Body, phoneNumber);
+    response.message("q2");
+  } else {
+    postAnswerOne(req.body.Body, phoneNumber);
+    response.message("Go Team GO!");
+  }
+  res.writeHead(200, { "Content-Type": "text/xml" });
+  res.end(response.toString());
 });
 
-app.get("/sms/send", (req, res) => {
-  // client.messages
-  //   .create({
-  //     body: `You got a text from port ${PORT}`,
-  //     to: "+12072130205",
-  //     from: "+17206082877"
-  //   })
-  //   .then(function(data) {
-  //     console.log(data.body);
-  console.log(`hi`);
-  res.send(`hi`);
-});
+
+function postAnswerOne(answer, phoneNumber) {
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      console.log(data);
+      fetch(`http://localhost:3000/q1Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({ data, answer })
+      });
+    })
+    .catch(function(res) {
+      console.log(res);
+    });
+}
+
+
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
