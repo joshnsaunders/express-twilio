@@ -1,5 +1,6 @@
 const config = require("./config.js");
 const fs = require("fs");
+const database = require('./db/knex')
 //console.log(config);
 //let data = require('./data')
 const express = require("express");
@@ -25,6 +26,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../public")));
+app.use(router)
 //app.use(graduates)
 
 
