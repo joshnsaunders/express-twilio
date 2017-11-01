@@ -19,11 +19,13 @@ console.log(authToken);
 let client = new twilio(accountSid, authToken);
 let MessagingResponse = require("twilio").twiml.MessagingResponse;
 
+var graduates = require('./routes/graduates')
+
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../public")));
-
+app.use(graduates)
 app.post("/sms", (req, res) => {
   const resp = new MessagingResponse();
 
