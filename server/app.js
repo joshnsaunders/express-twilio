@@ -26,6 +26,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../public")));
 app.use(graduates)
+
+
+
 app.post("/sms", (req, res) => {
   const resp = new MessagingResponse();
 

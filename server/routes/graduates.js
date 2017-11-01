@@ -10,3 +10,10 @@ router.get('/graduates' ,function(request, response){
 })
 
 module.exports = router
+
+router.get('/', function (request, response){
+  console.log('hi');
+  .then(function(data){
+    response.send(`hi`)
+  })
+})
