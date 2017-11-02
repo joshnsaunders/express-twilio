@@ -1,4 +1,4 @@
-//const config = require("./config.js");
+const config = require("./config.js");
 const fs = require("fs");
 const database = require("./db/knex");
 const fetch = require("isomorphic-fetch");
@@ -89,6 +89,8 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                console.log("hello world line 92")
+                postAnswersOne(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'yes'){
               console.log(`line 94`, numberOfAnswers[1]);
@@ -97,6 +99,7 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersTwo(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
               response.message(questions[4])
@@ -104,6 +107,7 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersThree(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
               response.message(questions[5])
@@ -111,6 +115,7 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersFour(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 5 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
               response.message(questions[6])
@@ -118,6 +123,7 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersFive(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 6 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
               response.message(questions[7])
@@ -125,6 +131,7 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersSix(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 7 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
               response.message(questions[8])
@@ -132,6 +139,10 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersSeven(req.body.Body, req.body.From);
+            }
+            if (numberOfAnswers.length === 8 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
+                postAnswersEight(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
               response.message(questions[7])
@@ -139,6 +150,7 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersSix(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
               response.message(questions[8])
@@ -146,6 +158,10 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersSeven(req.body.Body, req.body.From);
+            }
+            if (numberOfAnswers.length === 5 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
+                postAnswersEight(req.body.Body, req.body.From);
             }
             //---------Other Branch
             if (numberOfAnswers.length === 1 && valueOfAnswers.toLowerCase() === 'no'){
@@ -154,6 +170,7 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersOne(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
               response.message(questions[4])
@@ -161,6 +178,7 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersThree(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
               response.message(questions[5])
@@ -168,6 +186,7 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersFour(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
               response.message(questions[6])
@@ -175,6 +194,7 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersFive(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 5 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
               response.message(questions[7])
@@ -182,6 +202,7 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersSix(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 6 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
               response.message(questions[8])
@@ -189,6 +210,10 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersSeven(req.body.Body, req.body.From);
+            }
+            if (numberOfAnswers.length === 7 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
+                postAnswersEight(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
               response.message(questions[7])
@@ -196,6 +221,7 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersSix(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
               response.message(questions[8])
@@ -203,92 +229,11 @@ app.post("/sms", (req, res) => {
                   "Content-Type": "text/xml"
                 });
                 res.end(response.toString());
+                postAnswersSeven(req.body.Body, req.body.From);
             }
-
-
-            //function createMessage(numberofAnswers, valueOfAnswers)
-            // if (numberOfAnswers.length === 1 && valueOfAnswers === 'yes') {
-            //   console.log('should be sending');
-            //   response.message(questions[3])
-            //   res.writeHead(200, {
-            //     "Content-Type": "text/xml"
-            //   });
-            //   res.end(response.toString());
-            // }
-            //
-            // if (numberOfAnswers.length === 1 && valueOfAnswers === 'no') {
-            //   response.message(questions[2])
-            //   res.writeHead(200, {
-            //     "Content-Type": "text/xml"
-            //   });
-            //   res.end(response.toString());
-            // }
-            //
-            // if(numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no') {
-            //   response.message(questions[4])
-            //   res.writeHead(200, {
-            //     "Content-Type": "text/xml"
-            //   });
-            //   res.end(response.toString());
-            // }
-            //
-            // if(numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
-            //   response.message(questions[3])
-            //   res.writeHead(200, {
-            //     "Content-Type": "text/xml"
-            //   });
-            //   res.end(response.toString());
-            // }
-            //
-            // if(numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'yes'){
-            //   response.message(questions[4])
-            //   res.writeHead(200, {
-            //     "Content-Type": "text/xml"
-            //   });
-            //   res.end(response.toString());
-            // }
-            //
-            // if(numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'yes'){
-            //   response.message(questions[5])
-            //   res.writeHead(200, {
-            //     "Content-Type": "text/xml"
-            //   });
-            //   res.end(response.toString());
-            // }
-            // if(numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
-            //   response.message(questions[5])
-            //   res.writeHead(200, {
-            //     "Content-Type": "text/xml"
-            //   });
-            //   res.end(response.toString());
-            // }
-            //
-            // if(numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[3].toLowerCase() === 'no'){
-            //   response.message(questions[11])
-            //   res.writeHead(200, {
-            //     "Content-Type": "text/xml"
-            //   });
-            //   res.end(response.toString());
-            // }
-            // if(numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no' && numberOfAnswers[2].toLowerCase() === 'no' && numberOfAnswers[3].toLowerCase() === 'no'){
-            //   response.message(questions[11])
-            //   res.writeHead(200, {
-            //     "Content-Type": "text/xml"
-            //   });
-            //   res.end(response.toString());
-            // }
-
-
-
-
-            // else {
-            //   response.message(`no bueno`)
-            //   // res.writeHead(200, {
-            //   //   "Content-Type": "text/xml"
-            //   // });
-            //   // res.end(response.toString());
-            //
-            // }
+            if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
+                postAnswersEight(req.body.Body, req.body.From);
+            }
           }
         }
       }
@@ -313,7 +258,7 @@ app.post("/sms", (req, res) => {
 
 
 
-function postAnswerOne(answer, phoneNumber) {
+function postAnswersOne(answer, phoneNumber) {
   let number = database("graduates")
     .where({
       phone_number: phoneNumber
@@ -338,6 +283,174 @@ function postAnswerOne(answer, phoneNumber) {
     });
 }
 
+function postAnswersTwo(answer, phoneNumber) {
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`http://localhost:3000/q2Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
+}
+function postAnswersThree(answer, phoneNumber) {
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`http://localhost:3000/q3Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
+}
+function postAnswersFour(answer, phoneNumber) {
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`http://localhost:3000/q4Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
+}
+function postAnswersFive(answer, phoneNumber) {
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`http://localhost:3000/q5Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
+}
+function postAnswersSix(answer, phoneNumber) {
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`http://localhost:3000/q6Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
+}
+function postAnswersSeven(answer, phoneNumber) {
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`http://localhost:3000/q7Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
+}
+function postAnswersEight(answer, phoneNumber) {
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`http://localhost:3000/q8Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
+}
 
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
