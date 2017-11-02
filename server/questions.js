@@ -1,4 +1,4 @@
-export default const questions =[
+const questions = [
   "",
   "Are you attending a community college or post high school program of less than 2 years? Text yes, no or stop to opt out.",
   "Are you attending a university or post high school program of more than 2 years? Text yes, no or stop to opt out.",
@@ -12,3 +12,5 @@ export default const questions =[
   "Did anything you learned or experienced at Pathways help you in your current career or education? Text stop to opt out.",
   "Is there anything you wish you would have learned at Pathways to help your in your current career or education? Text stop to opt out.",
 ]
+
+module.exports = questions
