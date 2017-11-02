@@ -20,7 +20,7 @@ const MessagingResponse = require("twilio").twiml.MessagingResponse;
 const GraduatesRoutes = require("./routes/graduates")
 const AnswerRoutes = require("./routes/answers")
 const questions = require('./questions')
-const gradclassRouter = require('./routess/gradclass')
+const gradclassRouter = require('./routes/gradclass')
 const auth = require('.routes/auth')
 const heroku = 'https://secret-mountain-48217.herokuapp.com/'
 
