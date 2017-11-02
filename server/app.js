@@ -147,6 +147,11 @@ app.post("/sms", (req, res) => {
                 postAnswersSeven(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 8 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
+							response.message(`Thanks for participating and good luck with your career.`)
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
                 postAnswersEight(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
@@ -166,6 +171,11 @@ app.post("/sms", (req, res) => {
                 postAnswersSeven(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 5 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
+							response.message(`Thanks for participating and good luck with your career.`)
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
                 postAnswersEight(req.body.Body, req.body.From);
             }
             //---------Other Branch
@@ -218,6 +228,11 @@ app.post("/sms", (req, res) => {
                 postAnswersSeven(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 7 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
+							response.message(`Thanks for participating and good luck with your career.`)
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
                 postAnswersEight(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
@@ -237,6 +252,11 @@ app.post("/sms", (req, res) => {
                 postAnswersSeven(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
+							response.message(`Thanks for participating and good luck with your career.`)
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
                 postAnswersEight(req.body.Body, req.body.From);
             }
           }
