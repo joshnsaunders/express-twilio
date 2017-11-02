@@ -1,4 +1,4 @@
-const config = require("./config.js");
+//const config = require("./config.js");
 const fs = require("fs");
 const database = require("./db/knex");
 const fetch = require("isomorphic-fetch");
@@ -20,74 +20,73 @@ const MessagingResponse = require("twilio").twiml.MessagingResponse;
 const GraduatesRoutes = require("./routes/graduates")
 const AnswerRoutes = require("./routes/answers")
 const questions = require('./questions')
-const auth = require('./routes/auth')
-const gradclassRouter = require('./routes/gradclass');
-
+const gradclassRouter = require('./routess/gradclass')
+const auth = require('.routes/auth')
+const heroku = 'https://secret-mountain-48217.herokuapp.com/'
 
 app.use(cors());
 app.use(bodyParser.urlencoded({
-	extended: false
+  extended: false
 }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "../public")));
 app.use(router);
 app.use(GraduatesRoutes)
 app.use(AnswerRoutes)
-app.use(auth)
 app.use(gradclassRouter)
-
+app.use(auth)
 
 router.get("/graduates/:class_name", function(request, response) {
-	let className = request.params.class_name;
-	database("graduates")
-		.select("phone_number")
-		.where("class_name", className)
-		.then(function(data) {
-			for (var i = 0; i < data.length; i++) {
-				client.messages
-					.create({
-						body: ` Are you attending a community college or post high school program of less than 2 years? Text YES, NO or STOP to opt out.`,
-						to: data[i][`phone_number`],
-						from: `+17206082877`
-					})
-					.then(message => console.log(message.sid));
-			}
-			response.json(data);
-		});
+  let className = request.params.class_name;
+  database("graduates")
+    .select("phone_number")
+    .where("class_name", className)
+    .then(function(data) {
+      for (var i = 0; i < data.length; i++) {
+        client.messages
+          .create({
+            body: ` Are you attending a community college or post high school program of less than 2 years? Text YES, NO or STOP to opt out.`,
+            to: data[i][`phone_number`],
+            from: `+17206082877`
+          })
+          .then(message => console.log(message.sid));
+      }
+      response.json(data);
+    });
 });
 
 app.post("/sms", (req, res) => {
-	let response = new MessagingResponse();
-	let body = req.body.Body.split(" ");
-	let phoneNumber = req.body.From;
-	console.log(phoneNumber);
-	fs.readFile("./data.json", "utf-8", function(err, data) {
-		let regData = JSON.parse(data);
-		for (let i = 0; i < regData.length; i++) {
-			for (const key in regData[i]) {
-				console.log(`key`, key);
-				if (key === phoneNumber) {
-					regData[i][phoneNumber].push(body.splice(0, 1).join(` `));
-				}
-			}
-		}
-		console.log(`line 47`, regData);
+  let response = new MessagingResponse();
+  let body = req.body.Body.split(" ");
+  let phoneNumber = req.body.From;
+  console.log(phoneNumber);
+  fs.readFile("./data.json", "utf-8", function(err, data) {
+    let regData = JSON.parse(data);
+    for (let i = 0; i < regData.length; i++) {
+      for (const key in regData[i]) {
+        console.log(`key`, key);
+        if (key === phoneNumber) {
+          regData[i][phoneNumber].push(body.splice(0, 1).join(` `));
+        }
+      }
+    }
+    console.log(`line 47`, regData);
 
-		fs.writeFile('./data.json', `${JSON.stringify(regData)}`, function(err) {
-			if (err) throw err;
-			console.log('Updated!');
-		});
-		console.log("done!");
+    fs.writeFile('./data.json', `${JSON.stringify(regData)}`, function(err) {
+      if (err) throw err;
+      console.log('Updated!');
+    });
+    console.log("done!");
 
-		fs.readFile("./data.json", "utf-8", function(err, data) {
-			let regData = JSON.parse(data)
-			for (let i = 0; i < regData.length; i++) {
-				for (const key in regData[i]) {
-					if (key === phoneNumber) {
-						let numberOfAnswers = regData[i][phoneNumber]
-						let valueOfAnswers = regData[i][phoneNumber][numberOfAnswers.length - 1].toLowerCase()
-						console.log(`length`, numberOfAnswers);
-						console.log(`value`, valueOfAnswers);
+    fs.readFile("./data.json", "utf-8", function(err, data) {
+      let regData = JSON.parse(data)
+      for (let i = 0; i < regData.length; i++) {
+        for (const key in regData[i]) {
+          if (key === phoneNumber) {
+            let numberOfAnswers = regData[i][phoneNumber]
+            let valueOfAnswers = regData[i][phoneNumber][numberOfAnswers.length - 1].toLowerCase()
+            console.log(`length`, numberOfAnswers);
+            console.log(`value`, valueOfAnswers);
 
             if (numberOfAnswers.length === 1 && valueOfAnswers.toLowerCase() === 'yes'){
               response.message(questions[2])
@@ -148,11 +147,6 @@ app.post("/sms", (req, res) => {
                 postAnswersSeven(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 8 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
-              response.message(`Thank you for participating, and good luck!`)
-                res.writeHead(200, {
-                  "Content-Type": "text/xml"
-                });
-                res.end(response.toString());
                 postAnswersEight(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
@@ -171,12 +165,7 @@ app.post("/sms", (req, res) => {
                 res.end(response.toString());
                 postAnswersSeven(req.body.Body, req.body.From);
             }
-            if (numberOfAnswers.length >= 5 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
-              response.message(`Thank you for participating, and good luck!`)
-                res.writeHead(200, {
-                  "Content-Type": "text/xml"
-                });
-                res.end(response.toString());
+            if (numberOfAnswers.length === 5 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
                 postAnswersEight(req.body.Body, req.body.From);
             }
             //---------Other Branch
@@ -229,11 +218,6 @@ app.post("/sms", (req, res) => {
                 postAnswersSeven(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 7 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
-              response.message(`Thank you for participating, and good luck!`)
-                res.writeHead(200, {
-                  "Content-Type": "text/xml"
-                });
-                res.end(response.toString());
                 postAnswersEight(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
@@ -253,11 +237,6 @@ app.post("/sms", (req, res) => {
                 postAnswersSeven(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
-              response.message(`Thank you for participating, and good luck!`)
-                res.writeHead(200, {
-                  "Content-Type": "text/xml"
-                });
-                res.end(response.toString());
                 postAnswersEight(req.body.Body, req.body.From);
             }
           }
@@ -278,175 +257,6 @@ app.post("/sms", (req, res) => {
   //   postAnswerOne(req.body.Body, phoneNumber);
   //   response.message("Go Team GO!");
   // }
-						if (numberOfAnswers.length === 1 && valueOfAnswers.toLowerCase() === 'yes'){
-							response.message(questions[2])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							console.log("hello world line 92")
-							postAnswersOne(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'yes'){
-							console.log(`line 94`, numberOfAnswers[1]);
-							response.message(questions[3])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersTwo(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
-							response.message(questions[4])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersThree(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
-							response.message(questions[5])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersFour(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 5 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
-							response.message(questions[6])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersFive(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 6 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
-							response.message(questions[7])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersSix(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 7 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
-							response.message(questions[8])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersSeven(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 8 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
-							postAnswersEight(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
-							response.message(questions[7])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersSix(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
-							response.message(questions[8])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersSeven(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 5 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
-							postAnswersEight(req.body.Body, req.body.From);
-						}
-						//---------Other Branch
-						if (numberOfAnswers.length === 1 && valueOfAnswers.toLowerCase() === 'no'){
-							response.message(questions[3])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersOne(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
-							response.message(questions[4])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersThree(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
-							response.message(questions[5])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersFour(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
-							response.message(questions[6])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersFive(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 5 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
-							response.message(questions[7])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersSix(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 6 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
-							response.message(questions[8])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersSeven(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 7 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
-							postAnswersEight(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
-							response.message(questions[7])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersSix(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
-							response.message(questions[8])
-							res.writeHead(200, {
-								"Content-Type": "text/xml"
-							});
-							res.end(response.toString());
-							postAnswersSeven(req.body.Body, req.body.From);
-						}
-						if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
-							postAnswersEight(req.body.Body, req.body.From);
-						}
-					}
-				}
-			}
-		})
-	})
-	// if (body[0].toLowerCase() === "yes") {
-	//   postAnswerOne(req.body.Body, phoneNumber);
-	//
-	//   let newResponse = `q3`;
-	//   response.message(newResponse);
-	// } else if (body[0].toLowerCase() === "no") {
-	//   postAnswerOne(req.body.Body, phoneNumber);
-	//   response.message("q2");
-	// }
-	// else {
-	//   postAnswerOne(req.body.Body, phoneNumber);
-	//   response.message("Go Team GO!");
-	// }
 
 });
 
@@ -454,197 +264,197 @@ app.post("/sms", (req, res) => {
 
 
 function postAnswersOne(answer, phoneNumber) {
-	let number = database("graduates")
-		.where({
-			phone_number: phoneNumber
-		})
-		.select("*")
-		.then(data => {
-			//  console.log(data);
-			fetch(`http://localhost:3000/q1Answers`, {
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json"
-				},
-				method: "POST",
-				body: JSON.stringify({
-					data,
-					answer
-				})
-			});
-		})
-		.catch(function(res) {
-			//console.log(res);
-		});
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`${heroku}q1Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
 }
 
 function postAnswersTwo(answer, phoneNumber) {
-	let number = database("graduates")
-		.where({
-			phone_number: phoneNumber
-		})
-		.select("*")
-		.then(data => {
-			//  console.log(data);
-			fetch(`http://localhost:3000/q2Answers`, {
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json"
-				},
-				method: "POST",
-				body: JSON.stringify({
-					data,
-					answer
-				})
-			});
-		})
-		.catch(function(res) {
-			//console.log(res);
-		});
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`${heroku}q2Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
 }
 function postAnswersThree(answer, phoneNumber) {
-	let number = database("graduates")
-		.where({
-			phone_number: phoneNumber
-		})
-		.select("*")
-		.then(data => {
-			//  console.log(data);
-			fetch(`http://localhost:3000/q3Answers`, {
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json"
-				},
-				method: "POST",
-				body: JSON.stringify({
-					data,
-					answer
-				})
-			});
-		})
-		.catch(function(res) {
-			//console.log(res);
-		});
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`${heroku}q3Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
 }
 function postAnswersFour(answer, phoneNumber) {
-	let number = database("graduates")
-		.where({
-			phone_number: phoneNumber
-		})
-		.select("*")
-		.then(data => {
-			//  console.log(data);
-			fetch(`http://localhost:3000/q4Answers`, {
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json"
-				},
-				method: "POST",
-				body: JSON.stringify({
-					data,
-					answer
-				})
-			});
-		})
-		.catch(function(res) {
-			//console.log(res);
-		});
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`${heroku}q4Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
 }
 function postAnswersFive(answer, phoneNumber) {
-	let number = database("graduates")
-		.where({
-			phone_number: phoneNumber
-		})
-		.select("*")
-		.then(data => {
-			//  console.log(data);
-			fetch(`http://localhost:3000/q5Answers`, {
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json"
-				},
-				method: "POST",
-				body: JSON.stringify({
-					data,
-					answer
-				})
-			});
-		})
-		.catch(function(res) {
-			//console.log(res);
-		});
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`${heroku}q5Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
 }
 function postAnswersSix(answer, phoneNumber) {
-	let number = database("graduates")
-		.where({
-			phone_number: phoneNumber
-		})
-		.select("*")
-		.then(data => {
-			//  console.log(data);
-			fetch(`http://localhost:3000/q6Answers`, {
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json"
-				},
-				method: "POST",
-				body: JSON.stringify({
-					data,
-					answer
-				})
-			});
-		})
-		.catch(function(res) {
-			//console.log(res);
-		});
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`${heroku}q6Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
 }
 function postAnswersSeven(answer, phoneNumber) {
-	let number = database("graduates")
-		.where({
-			phone_number: phoneNumber
-		})
-		.select("*")
-		.then(data => {
-			//  console.log(data);
-			fetch(`http://localhost:3000/q7Answers`, {
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json"
-				},
-				method: "POST",
-				body: JSON.stringify({
-					data,
-					answer
-				})
-			});
-		})
-		.catch(function(res) {
-			//console.log(res);
-		});
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`${heroku}q7Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
 }
 function postAnswersEight(answer, phoneNumber) {
-	let number = database("graduates")
-		.where({
-			phone_number: phoneNumber
-		})
-		.select("*")
-		.then(data => {
-			//  console.log(data);
-			fetch(`http://localhost:3000/q8Answers`, {
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json"
-				},
-				method: "POST",
-				body: JSON.stringify({
-					data,
-					answer
-				})
-			});
-		})
-		.catch(function(res) {
-			//console.log(res);
-		});
+  let number = database("graduates")
+    .where({
+      phone_number: phoneNumber
+    })
+    .select("*")
+    .then(data => {
+      //  console.log(data);
+      fetch(`${heroku}q8Answers`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+          data,
+          answer
+        })
+      });
+    })
+    .catch(function(res) {
+      //console.log(res);
+    });
 }
 
 
