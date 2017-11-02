@@ -16,5 +16,7 @@ exports.seed = function(knex, Promise) {
         email: 'ping@pong.com',
         hash: 'password',
       }]);
-    });
+    }).then(function(){
+      return knex.raw('alter sequence auth_id_seq restart with 4')
+    })
 };

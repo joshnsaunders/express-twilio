@@ -20,6 +20,7 @@ const MessagingResponse = require("twilio").twiml.MessagingResponse;
 const GraduatesRoutes = require("./routes/graduates")
 const AnswerRoutes = require("./routes/answers")
 const questions = require('./questions')
+const auth = require('./routes/auth')
 
 app.use(cors());
 app.use(bodyParser.urlencoded({
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use(router);
 app.use(GraduatesRoutes)
 app.use(AnswerRoutes)
+app.use(auth)
 
 router.get("/graduates/:class_name", function(request, response) {
   let className = request.params.class_name;
@@ -142,6 +144,11 @@ app.post("/sms", (req, res) => {
                 postAnswersSeven(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 8 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
+              response.message(`Thank you for participating, and good luck!`)
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
                 postAnswersEight(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
@@ -160,7 +167,12 @@ app.post("/sms", (req, res) => {
                 res.end(response.toString());
                 postAnswersSeven(req.body.Body, req.body.From);
             }
-            if (numberOfAnswers.length === 5 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
+            if (numberOfAnswers.length >= 5 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
+              response.message(`Thank you for participating, and good luck!`)
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
                 postAnswersEight(req.body.Body, req.body.From);
             }
             //---------Other Branch
@@ -213,6 +225,11 @@ app.post("/sms", (req, res) => {
                 postAnswersSeven(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 7 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
+              response.message(`Thank you for participating, and good luck!`)
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
                 postAnswersEight(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
@@ -232,6 +249,11 @@ app.post("/sms", (req, res) => {
                 postAnswersSeven(req.body.Body, req.body.From);
             }
             if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
+              response.message(`Thank you for participating, and good luck!`)
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
                 postAnswersEight(req.body.Body, req.body.From);
             }
           }
