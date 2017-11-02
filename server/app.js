@@ -102,26 +102,26 @@ app.post("/sms", (req, res) => {
 
             if(numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no') {
               response.message(questions[4])
-              // res.writeHead(200, {
-              //   "Content-Type": "text/xml"
-              // });
-              // res.end(response.toString());
+              res.writeHead(200, {
+                "Content-Type": "text/xml"
+              });
+              res.end(response.toString());
             }
 
             if(numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
               response.message(questions[3])
-              // res.writeHead(200, {
-              //   "Content-Type": "text/xml"
-              // });
-              // res.end(response.toString());
+              res.writeHead(200, {
+                "Content-Type": "text/xml"
+              });
+              res.end(response.toString());
             }
 
             if(numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'yes'){
               response.message(questions[4])
-              // res.writeHead(200, {
-              //   "Content-Type": "text/xml"
-              // });
-              // res.end(response.toString());
+              res.writeHead(200, {
+                "Content-Type": "text/xml"
+              });
+              res.end(response.toString());
             }
 
             if(numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'yes'){
