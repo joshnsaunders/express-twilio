@@ -1,4 +1,4 @@
-//const config = require("./config.js");
+const config = require("./config.js");
 const fs = require("fs");
 const database = require("./db/knex");
 const fetch = require("isomorphic-fetch");
@@ -82,89 +82,213 @@ app.post("/sms", (req, res) => {
             let valueOfAnswers = regData[i][phoneNumber][numberOfAnswers.length - 1].toLowerCase()
             console.log(`length`, numberOfAnswers);
             console.log(`value`, valueOfAnswers);
-            //function createMessage(numberofAnswers, valueOfAnswers)
-            if (numberOfAnswers.length === 1 && valueOfAnswers === 'yes') {
-              console.log('should be sending');
-              response.message(questions[3])
-              res.writeHead(200, {
-                "Content-Type": "text/xml"
-              });
-              res.end(response.toString());
-            }
 
-            if (numberOfAnswers.length === 1 && valueOfAnswers === 'no') {
+            if (numberOfAnswers.length === 1 && valueOfAnswers.toLowerCase() === 'yes'){
               response.message(questions[2])
-              res.writeHead(200, {
-                "Content-Type": "text/xml"
-              });
-              res.end(response.toString());
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
             }
-
-            if(numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no') {
-              response.message(questions[4])
-              res.writeHead(200, {
-                "Content-Type": "text/xml"
-              });
-              res.end(response.toString());
-            }
-
-            if(numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
+            if (numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'yes'){
+              console.log(`line 94`, numberOfAnswers[1]);
               response.message(questions[3])
-              res.writeHead(200, {
-                "Content-Type": "text/xml"
-              });
-              res.end(response.toString());
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
             }
-
-            if(numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'yes'){
+            if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
               response.message(questions[4])
-              res.writeHead(200, {
-                "Content-Type": "text/xml"
-              });
-              res.end(response.toString());
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
             }
-
-            if(numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'yes'){
+            if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
               response.message(questions[5])
-              res.writeHead(200, {
-                "Content-Type": "text/xml"
-              });
-              res.end(response.toString());
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
             }
-            if(numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
+            if (numberOfAnswers.length === 5 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
+              response.message(questions[6])
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
+            }
+            if (numberOfAnswers.length === 6 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
+              response.message(questions[7])
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
+            }
+            if (numberOfAnswers.length === 7 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'yes'){
+              response.message(questions[8])
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
+            }
+            if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
+              response.message(questions[7])
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
+            }
+            if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[2].toLowerCase() === 'no'){
+              response.message(questions[8])
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
+            }
+            //---------Other Branch
+            if (numberOfAnswers.length === 1 && valueOfAnswers.toLowerCase() === 'no'){
+              response.message(questions[3])
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
+            }
+            if (numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
+              response.message(questions[4])
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
+            }
+            if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
               response.message(questions[5])
-              res.writeHead(200, {
-                "Content-Type": "text/xml"
-              });
-              res.end(response.toString());
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
+            }
+            if (numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
+              response.message(questions[6])
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
+            }
+            if (numberOfAnswers.length === 5 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
+              response.message(questions[7])
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
+            }
+            if (numberOfAnswers.length === 6 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
+              response.message(questions[8])
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
+            }
+            if (numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
+              response.message(questions[7])
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
+            }
+            if (numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
+              response.message(questions[8])
+                res.writeHead(200, {
+                  "Content-Type": "text/xml"
+                });
+                res.end(response.toString());
             }
 
-            if(numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[3].toLowerCase() === 'no'){
-              response.message(questions[11])
-              res.writeHead(200, {
-                "Content-Type": "text/xml"
-              });
-              res.end(response.toString());
-            }
-            if(numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no' && numberOfAnswers[2].toLowerCase() === 'no' && numberOfAnswers[3].toLowerCase() === 'no'){
-              response.message(questions[11])
-              res.writeHead(200, {
-                "Content-Type": "text/xml"
-              });
-              res.end(response.toString());
-            }
+
+            //function createMessage(numberofAnswers, valueOfAnswers)
+            // if (numberOfAnswers.length === 1 && valueOfAnswers === 'yes') {
+            //   console.log('should be sending');
+            //   response.message(questions[3])
+            //   res.writeHead(200, {
+            //     "Content-Type": "text/xml"
+            //   });
+            //   res.end(response.toString());
+            // }
+            //
+            // if (numberOfAnswers.length === 1 && valueOfAnswers === 'no') {
+            //   response.message(questions[2])
+            //   res.writeHead(200, {
+            //     "Content-Type": "text/xml"
+            //   });
+            //   res.end(response.toString());
+            // }
+            //
+            // if(numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no') {
+            //   response.message(questions[4])
+            //   res.writeHead(200, {
+            //     "Content-Type": "text/xml"
+            //   });
+            //   res.end(response.toString());
+            // }
+            //
+            // if(numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'yes'){
+            //   response.message(questions[3])
+            //   res.writeHead(200, {
+            //     "Content-Type": "text/xml"
+            //   });
+            //   res.end(response.toString());
+            // }
+            //
+            // if(numberOfAnswers.length === 2 && numberOfAnswers[0].toLowerCase() === 'yes'){
+            //   response.message(questions[4])
+            //   res.writeHead(200, {
+            //     "Content-Type": "text/xml"
+            //   });
+            //   res.end(response.toString());
+            // }
+            //
+            // if(numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'yes'){
+            //   response.message(questions[5])
+            //   res.writeHead(200, {
+            //     "Content-Type": "text/xml"
+            //   });
+            //   res.end(response.toString());
+            // }
+            // if(numberOfAnswers.length === 3 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no'){
+            //   response.message(questions[5])
+            //   res.writeHead(200, {
+            //     "Content-Type": "text/xml"
+            //   });
+            //   res.end(response.toString());
+            // }
+            //
+            // if(numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'yes' && numberOfAnswers[3].toLowerCase() === 'no'){
+            //   response.message(questions[11])
+            //   res.writeHead(200, {
+            //     "Content-Type": "text/xml"
+            //   });
+            //   res.end(response.toString());
+            // }
+            // if(numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no' && numberOfAnswers[2].toLowerCase() === 'no' && numberOfAnswers[3].toLowerCase() === 'no'){
+            //   response.message(questions[11])
+            //   res.writeHead(200, {
+            //     "Content-Type": "text/xml"
+            //   });
+            //   res.end(response.toString());
+            // }
 
 
 
 
-            else {
-              response.message(`no bueno`)
-              // res.writeHead(200, {
-              //   "Content-Type": "text/xml"
-              // });
-              // res.end(response.toString());
-
-            }
+            // else {
+            //   response.message(`no bueno`)
+            //   // res.writeHead(200, {
+            //   //   "Content-Type": "text/xml"
+            //   // });
+            //   // res.end(response.toString());
+            //
+            // }
           }
         }
       }
