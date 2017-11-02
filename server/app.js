@@ -146,7 +146,7 @@ app.post("/sms", (req, res) => {
               });
               res.end(response.toString());
             }
-            if(numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no' && numberOfAnswers[2].toLowerCase(3) === 'no' && numberOfAnswers[3] === 'no'){
+            if(numberOfAnswers.length === 4 && numberOfAnswers[0].toLowerCase() === 'no' && numberOfAnswers[1].toLowerCase() === 'no' && numberOfAnswers[2].toLowerCase() === 'no' && numberOfAnswers[3].toLowerCase() === 'no'){
               response.message(questions[11])
               res.writeHead(200, {
                 "Content-Type": "text/xml"
