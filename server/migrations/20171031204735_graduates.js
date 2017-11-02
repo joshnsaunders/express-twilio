@@ -7,7 +7,7 @@ exports.up = function(knex, Promise) {
     table.varchar('email')
     table.boolean('opt_in_status')
     table.integer('class_name')
-      .references('gradClass.id')
+      .references('grad_class.id')
         .onDelete('CASCADE')
   });
 };
