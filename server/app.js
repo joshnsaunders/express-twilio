@@ -21,7 +21,7 @@ const GraduatesRoutes = require("./routes/graduates")
 const AnswerRoutes = require("./routes/answers")
 const questions = require('./questions')
 const gradclassRouter = require('./routes/gradclass')
-const auth = require('.routes/auth')
+const auth = require('./routes/auth')
 const heroku = 'https://secret-mountain-48217.herokuapp.com/'
 
 app.use(cors());
