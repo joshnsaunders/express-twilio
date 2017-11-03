@@ -1,4 +1,4 @@
-//const config = require("./config.js");
+const config = require("./config.js");
 const fs = require("fs");
 const database = require("./db/knex");
 const fetch = require("isomorphic-fetch");
@@ -12,10 +12,10 @@ const ngrok = require("ngrok");
 const cors = require("cors");
 const PORT = process.env.PORT || 3000;
 const path = require("path");
-const twilio = require("twilio");
+//const twilio = require("twilio");
 const accountSid = process.env.SID || config.SID;
 const authToken = process.env.AUTH_TOKEN || config.AUTH_TOKEN;
-const client = new twilio(accountSid, authToken);
+const client = require('twilio')(accountSid, authToken);
 const MessagingResponse = require("twilio").twiml.MessagingResponse;
 const GraduatesRoutes = require("./routes/graduates")
 const AnswerRoutes = require("./routes/answers")
@@ -42,10 +42,11 @@ router.get("/graduates/:class_name", function(request, response) {
     .select("phone_number")
     .where("class_name", className)
     .then(function(data) {
+			console.log(data);
       for (var i = 0; i < data.length; i++) {
         client.messages
           .create({
-            body: ` Are you attending a community college or post high school program of less than 2 years? Text YES, NO or STOP to opt out.`,
+            body: `Are you attending post high school program, Community College, or University? Text yes and what program, no or stop to opt out.`,
             to: data[i][`phone_number`],
             from: `+17206082877`
           })
@@ -264,19 +265,6 @@ app.post("/sms", (req, res) => {
       }
     })
   })
-  // if (body[0].toLowerCase() === "yes") {
-  //   postAnswerOne(req.body.Body, phoneNumber);
-  //
-  //   let newResponse = `q3`;
-  //   response.message(newResponse);
-  // } else if (body[0].toLowerCase() === "no") {
-  //   postAnswerOne(req.body.Body, phoneNumber);
-  //   response.message("q2");
-  // }
-  // else {
-  //   postAnswerOne(req.body.Body, phoneNumber);
-  //   response.message("Go Team GO!");
-  // }
 
 });
 

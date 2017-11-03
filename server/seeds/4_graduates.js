@@ -21,7 +21,7 @@ exports.seed = function(knex, Promise) {
           email:'jos@gmail.com',
           opt_in_status:true,
           phone_number:'+13036380055',
-          class_name:2,
+          class_name:1,
         },
         {
           id:3,
@@ -30,7 +30,7 @@ exports.seed = function(knex, Promise) {
           email:'kyl@gmail.com',
           opt_in_status:true,
           phone_number:'+15038902873',
-          class_name:2,
+          class_name:1,
         },
         {
           id:4,
@@ -39,7 +39,7 @@ exports.seed = function(knex, Promise) {
           email:'lindsay@gmail.com',
           opt_in_status:true,
           phone_number:'+12072863435',
-          class_name:3,
+          class_name:1,
         },
       ]);
     }).then(function(){
