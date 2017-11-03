@@ -43,7 +43,7 @@ router.get("/graduates/:class_name", function(request, response) {
     .where("class_name", className)
     .then(function(data) {
 			console.log(data);
-      for (var i = 0; i < data.length; i++) {
+      for(var i = 0; i < data.length; i++) {
         client.messages
           .create({
             body: `Are you attending post high school program, Community College, or University? Text yes and what program, no or stop to opt out.`,
