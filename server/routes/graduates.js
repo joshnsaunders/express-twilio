@@ -21,12 +21,12 @@ router.get('/graduates' ,function(request, response){
 // get one grads
 router.get('/graduates/:id', function(request, response) {
   database('graduates')
-    .where('id', '=', request.params.id)
+    .where('class_name', '=', request.params.id)
 });
 
 router.post('/graduates/add', function(request, response) {
   database('graduates')
-    .insert({ 
+    .insert({
       first_name: request.body.first_name,
       last_name: request.body.last_name,
       phone_number: request.body.phone_number,
