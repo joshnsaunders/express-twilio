@@ -1,4 +1,4 @@
-//const config = require("./config.js");
+const config = require("./config.js");
 const fs = require("fs");
 const database = require("./db/knex");
 const fetch = require("isomorphic-fetch");
@@ -39,8 +39,8 @@ app.use(auth)
 router.get("/graduates/:class_name", function(request, response) {
   let className = request.params.class_name;
   database("graduates")
-    .select("phone_number")
-    .where("class_name", className)
+    // .select("phone_number")
+    // .where("class_name", className)
     .then(function(data) {
 			console.log(data);
       for(var i = 0; i < data.length; i++) {
