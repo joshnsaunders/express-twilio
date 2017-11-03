@@ -40,6 +40,7 @@ router.post('/graduates/add', function(request, response) {
     .then(() => {
       response.json('added')
     })
+    .catch(err => console.log(err))
 })
 
 
