@@ -36,8 +36,6 @@ app.use(AnswerRoutes)
 app.use(gradclassRouter)
 app.use(auth)
 
-//Are you attending post high school program, Community College, or University? Text yes and what program, no or stop to opt out.
-
 router.get("/graduates/:class_name", function(request, response) {
   let className = request.params.class_name;
   database("graduates")
@@ -48,7 +46,7 @@ router.get("/graduates/:class_name", function(request, response) {
       for(var i = 0; i < data.length; i++) {
         client.messages
           .create({
-            body: `Test text, from Josh at G59, we'll try not to blow up ur phone too much this morning, thanks!`,
+            body: `Are you attending a post high school program, Community College, or University? Text yes and what program, no or stop to opt out.`,
             to: data[i][`phone_number`],
             from: `+17206082877`
           })
