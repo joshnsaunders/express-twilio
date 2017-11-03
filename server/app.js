@@ -1,4 +1,4 @@
-const config = require("./config.js");
+//const config = require("./config.js");
 const fs = require("fs");
 const database = require("./db/knex");
 const fetch = require("isomorphic-fetch");
