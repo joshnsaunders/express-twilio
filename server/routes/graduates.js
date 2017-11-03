@@ -22,6 +22,9 @@ router.get('/graduates' ,function(request, response){
 router.get('/graduates/:id', function(request, response) {
   database('graduates')
     .where('class_name', '=', request.params.id)
+    .then(function(data){
+      response.json(data)
+    })
 });
 
 router.post('/graduates/add', function(request, response) {
