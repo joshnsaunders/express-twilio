@@ -1,4 +1,4 @@
-const config = require("../server/config.js");
+//const config = require("../server/config.js");
 //const fs = require("fs");
 //const database = require("./db/knex");
 //const fetch = require("isomorphic-fetch");
@@ -22,7 +22,7 @@ const client = require('twilio')(accountSid, authToken);
 //const questions = require('./questions')
 //const gradclassRouter = require('./routes/gradclass')
 //const auth = require('./routes/auth')
-//const heroku = 'https://secret-mountain-48217.herokuapp.com/'
+//const heroku = 'https://stark-reef-91742.herokuapp.com/'
 app.use(cors());
 app.use(bodyParser.urlencoded({
   extended: false
